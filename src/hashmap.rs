@@ -9,13 +9,19 @@ const FILL_FACTOR: f64 = 0.75;
 const DEFAULT_MAX_SIZE: usize = 32;
 
 #[derive(Debug)]
-pub struct HashMap<V: Copy + Clone + Debug> {
+pub struct HashMap<V>
+where
+    V: Copy + Clone + Debug,
+{
     pub values: Vec<Option<Node<V>>>,
     len: usize,
     hasher: Box<dyn Hasher>,
 }
 
-impl<V: Copy + Clone + Debug> HashMap<V> {
+impl<V> HashMap<V>
+where
+    V: Copy + Clone + Debug,
+{
     pub fn new() -> Self {
         Self {
             values: vec![None; DEFAULT_MAX_SIZE],
