@@ -1,7 +1,7 @@
-use std::{array, fmt::Debug};
+use std::fmt::Debug;
 
 use crate::{
-    hashers::{easy_hasher::EasyHasher, Hasher},
+    hashers::{easy_hasher::EasyHasher, mid_hasher::MidHasher, Hasher},
     node::Node,
 };
 
@@ -26,17 +26,17 @@ where
         Self {
             values: vec![None; DEFAULT_MAX_SIZE],
             len: 0,
-            hasher: Box::new(EasyHasher {}),
+            hasher: Box::new(MidHasher {}),
         }
     }
     pub fn insert(&mut self, key: &str, val: V) {
         if self.contains_key(key) {
             self.update_key(key, val);
         } else {
-            self.len += 1;
             if self.should_resize() {
                 self.resize();
             }
+            self.len += 1;
             let key_index = self.get_hasher_index(key);
             match self.values.get_mut(key_index) {
                 Some(Some(node)) => {
@@ -170,6 +170,7 @@ where
 mod tests {
     use super::HashMap;
     use crate::hashmap::DEFAULT_MAX_SIZE;
+
     #[test]
     fn create() {
         let hash_map: HashMap<i32> = HashMap::new();
@@ -191,6 +192,15 @@ mod tests {
         hash_map.insert("ten", 10);
         hash_map.insert("ten", 9);
         assert_eq!(Some(9), hash_map.get("ten"));
+    }
+    #[test]
+    fn insert_with_resize() {
+        let mut hash_map: HashMap<i32> = HashMap::new();
+        for i in 0..25 {
+            hash_map.insert(&format!("key{i}"), i);
+        }
+        assert_eq!(DEFAULT_MAX_SIZE * 2, hash_map.capacity());
+        assert_eq!(25, hash_map.len());
     }
     #[test]
     fn get_different_keys() {
@@ -260,7 +270,7 @@ mod tests {
     #[test]
     fn capacity_after_expand() {
         let mut hash_map: HashMap<i32> = HashMap::new();
-        for i in 0..24 {
+        for i in 0..25 {
             hash_map.insert(&format!("key{i}"), i);
         }
         assert_eq!(DEFAULT_MAX_SIZE * 2, hash_map.capacity());
@@ -277,7 +287,7 @@ mod tests {
     #[test]
     fn should_resize_if_equals_fill_factor() {
         let mut hash_map: HashMap<usize> = HashMap::new();
-        for i in 0..24 {
+        for i in 0..25 {
             hash_map.insert(&format!("key{i}"), i);
         }
         assert_eq!(DEFAULT_MAX_SIZE * 2, hash_map.capacity());

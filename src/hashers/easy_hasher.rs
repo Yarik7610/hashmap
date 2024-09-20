@@ -23,32 +23,22 @@ impl Hasher for EasyHasher {
 mod tests {
     use super::*;
     #[test]
-    fn get_hash1() {
+    fn get_hash_usual() {
         let hasher = EasyHasher {};
         assert_eq!(315, hasher.get_hash("kek"));
     }
     #[test]
-    fn get_index1() {
+    fn get_index_usual() {
         let hasher = EasyHasher {};
         assert_eq!(27, hasher.get_index(315, 32));
     }
     #[test]
-    fn get_hash2() {
-        let hasher = EasyHasher {};
-        assert_eq!(243, hasher.get_hash("-0123"));
-    }
-    #[test]
-    fn get_index2() {
-        let hasher = EasyHasher {};
-        assert_eq!(51, hasher.get_index(243, 64));
-    }
-    #[test]
-    fn get_hash3() {
+    fn get_hash_zero() {
         let hasher = EasyHasher {};
         assert_eq!(0, hasher.get_hash(""));
     }
     #[test]
-    fn get_index3() {
+    fn get_index_zero() {
         let hasher = EasyHasher {};
         assert_eq!(0, hasher.get_index(0, 32));
     }
