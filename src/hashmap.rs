@@ -13,7 +13,7 @@ pub struct HashMap<V>
 where
     V: Copy + Clone + Debug,
 {
-    pub values: Vec<Option<Node<V>>>,
+    values: Vec<Option<Node<V>>>,
     len: usize,
     hasher: Box<dyn Hasher>,
 }
